@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+
+{% block title %}Log Analysis{% endblock %}
+
+{% block extra_styles %}
+<style>
+    .controls {
+        text-align: center;
+        margin-top: 2rem;
+    }
+
+    .graph-container {
+        display: flex;
+        justify-content: center;
+        margin-top: 2rem;
+    }
+
+    .graph-item {
+        width: 80%;
+        max-width: 800px;
+        text-align: center;
+        border: 1px solid #eee;
+        padding: 1rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        display: none; /* Hidden by default */
+    }
+
+    .graph-item img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    .no-logs-message {
+        text-align: center;
+        margin-top: 2rem;
+        font-size: 1.2rem;
+        color: #ff0000;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<h1 style="text-align: center;">Log Analysis</h1>
+
+<div class="controls text-center my-6">
+    <label for="graph-selector" class="block mb-2 text-lg font-semibold text-gray-700">Select a Graph:</label>
+    
+    <div class="relative inline-block w-72">
+        <select id="graph-selector" class="block w-full px-4 py-2 pr-10 text-gray-800 bg-white border border-gray-300 rounded-lg shadow-sm appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out">
+            <option value="">-- Select --</option>
+            <option value="log_distribution">Log Type Distribution (Bar Chart)</option>
+            <option value="app_usage">Application Usage Count</option>
+            <option value="log_pie_chart">Log Type Distribution (Pie Chart)</option>
+            <option value="top_opened_apps">Top 5 Most Opened Apps</option>
+            <option value="app_usage_over_time">Application Usage Over Time</option>
+            <option value="cpu_usage_over_time">CPU Usage Over Time</option>
+            <option value="network_status_distribution">Network Status Distribution</option>
+            <option value="top_local_ips">Top 5 Local IPs</option>
+            <option value="top_remote_ips">Top 5 Remote IPs</option>
+        </select>
+    </div>
+</div>
+
+
+<div id="no-logs-message" class="no-logs-message" style="display: none;">
+    No logs found.
+</div>
+
+<div class="graph-container">
+    <div class="graph-item" id="log_distribution_container">
+        <h3>Log Type Distribution (Bar Chart)</h3>
+        <img id="log_distribution" src="" alt="Log Type Distribution (Bar Chart)">
+    </div>
+    <div class="graph-item" id="app_usage_container">
+        <h3>Application Usage Count</h3>
+        <img id="app_usage" src="" alt="Application Usage Count">
+    </div>
+    <div class="graph-item" id="log_pie_chart_container">
+        <h3>Log Type Distribution (Pie Chart)</h3>
+        <img id="log_pie_chart" src="" alt="Log Type Distribution (Pie Chart)">
+    </div>
+    <div class="graph-item" id="top_opened_apps_container">
+        <h3>Top 5 Most Opened Apps</h3>
+        <img id="top_opened_apps" src="" alt="Top 5 Most Opened Apps">
+    </div>
+    <div class="graph-item" id="app_usage_over_time_container">
+        <h3>Application Usage Over Time</h3>
+        <img id="app_usage_over_time" src="" alt="Application Usage Over Time">
+    </div>
+    <div class="graph-item" id="cpu_usage_over_time_container">
+        <h3>CPU Usage Over Time</h3>
+        <img id="cpu_usage_over_time" src="" alt="CPU Usage Over Time">
+    </div>
+    <div class="graph-item" id="network_status_distribution_container">
+        <h3>Network Status Distribution</h3>
+        <img id="network_status_distribution" src="" alt="Network Status Distribution">
+    </div>
+    <div class="graph-item" id="top_local_ips_container">
+        <h3>Top 5 Local IPs</h3>
+        <img id="top_local_ips" src="" alt="Top 5 Local IPs">
+    </div>
+    <div class="graph-item" id="top_remote_ips_container">
+        <h3>Top 5 Remote IPs</h3>
+        <img id="top_remote_ips" src="" alt="Top 5 Remote IPs">
+    </div>
+</div>
+<a href="{% url 'home' %}" class="btn btn-primary mt-4">Back to Home</a>
+<hr>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    function updateGraph(elementId, graphData) {
+        if (graphData) {
+            $('#' + elementId).attr('src', 'data:image/png;base64,' + graphData);
+        } else {
+            $('#' + elementId + '_container').hide();
+        }
+    }
+
+    function fetchAnalysisData() {
+        $.ajax({
+            url: '{% url "fetch_analysis_data" %}',
+            method: 'GET',
+            success: function(data) {
+                if (data.error || !data.log_distribution) {
+                    $('#no-logs-message').text("No logs found.").show();
+                    $('.graph-item').hide();
+                } else {
+                    $('#no-logs-message').hide();
+                    updateGraph('log_distribution', data.log_distribution);
+                    updateGraph('app_usage', data.app_usage);
+                    updateGraph('log_pie_chart', data.log_pie_chart);
+                    updateGraph('top_opened_apps', data.top_opened_apps);
+                    updateGraph('app_usage_over_time', data.app_usage_over_time);
+                    updateGraph('cpu_usage_over_time', data.cpu_usage_over_time);
+                    updateGraph('network_status_distribution', data.network_status_distribution);
+                    updateGraph('top_local_ips', data.top_local_ips);
+                    updateGraph('top_remote_ips', data.top_remote_ips);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("Error fetching analysis data:", error);
+                $('#no-logs-message').text("No Logs Found.").show();
+                $('.graph-item').hide();
+            }
+        });
+    }
+
+    $(document).ready(function() {
+        fetchAnalysisData(); 
+        setInterval(fetchAnalysisData, 5000);  // Refresh data every 5 seconds
+
+        $('#graph-selector').on('change', function() {
+            const selected = $(this).val();
+            $('.graph-item').hide(); // Hide all graphs
+            if (selected) {
+                $('#' + selected + '_container').show(); // Show selected
+            }
+        });
+    });
+</script>
+{% endblock %}

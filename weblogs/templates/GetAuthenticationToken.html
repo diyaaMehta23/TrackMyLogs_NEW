@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}Authentication Token - TrackMyLogs{% endblock %}
+
+{% block extra_styles %}
+<style>
+    @import url("https://fonts.googleapis.com/css2?family=Moderustic:wght@300..800&display=swap");
+    * {
+        font-family: "Moderustic", system-ui;
+    }
+    body {
+        height: 100vh;
+        font-family: Arial, sans-serif;
+    }
+
+    .content {
+        width: 70%;
+        text-align: center;
+        margin: 100px auto;
+    }
+
+    .content h1 {
+        font-size: clamp(1.5rem, 4vw, 4rem);
+        font-weight: 400;
+        margin-bottom: 10px;
+    }
+
+    .content p {
+        font-size: clamp(1rem, 3vw, 1.3rem);
+        margin-bottom: 20px;
+    }
+
+    .form-check {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .form-check-input {
+        margin: 0 10px;
+        border: 1px solid rgba(0, 0, 0, 0.6);
+    }
+
+    .download-section {
+        margin: 20px 0;
+        text-align: center;
+    }
+
+    .download-section #downloadBtn {
+        margin: 5px 10px;
+        font-size: clamp(0.6rem, 4vw, 1rem);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="content">
+    <h1>Your Authentication Token</h1>
+    {% if message %}
+    <p>{{ message }}</p>
+    <p><strong>Username:</strong> {{ username }}</p>
+    <p><strong>Email:</strong> {{ email }}</p>
+    <p><strong>Authentication Token:</strong> {{ authentication_token }}</p>
+    {% else %}
+    <p>
+        Submit this token on the downloaded TrackMyLogs Log Analyzer to securely connect and analyze logs on your PC.
+    </p>
+    <p><strong>Username:</strong> {{ username }}</p>
+    <p><strong>Email:</strong> {{ email }}</p>
+    <p><strong>Authentication Token:</strong> {{ authentication_token }}</p>
+    
+    {% endif %}
+    <a href="{% url 'home' %}" class="btn btn-primary mt-4">Back to Home</a>
+    <a href="{% url 'profile' %}" class="btn btn-success mt-4">Profile</a>
+</div>
+{% endblock %}

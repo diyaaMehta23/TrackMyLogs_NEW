@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block extra_styles %}
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Moderustic:wght@300..800&display=swap');
+    * {
+        font-family: "Moderustic", system-ui;
+    }
+
+    .content {
+        text-align: center;
+        margin: 118px auto;
+    }
+
+    .content h1 {
+        font-size: clamp(1.5rem, 4vw, 4rem);
+        font-weight: 400;
+        margin-bottom: 10px;
+        color: #007bff; /* Blueish */
+    }
+
+    .content p {
+        font-size: clamp(1rem, 3vw, 1.5rem);
+        margin-bottom: 20px;
+        color: #2a2a2a; /* Paragraph */
+    }
+
+    .form-check {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .form-check-input {
+        margin: 0 10px;
+        border: 1px solid rgba(0, 0, 0, 0.6);
+    }
+
+    .download-section {
+        margin: 20px 0;
+        text-align: center;
+    }
+
+    .download-section #downloadBtn {
+        margin: 5px 10px;
+        font-size: clamp(0.6rem, 4vw, 1rem);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="content">
+    <h1>Welcome to TrackMyLogs</h1>
+    <p>Log it, learn from it, leave no trace.</p>
+    <div class="download-section">
+        <button id="downloadBtn" class="btn btn-primary" disabled>Download Logger<br>(Windows Only)</button>
+        <form class="form-inline my-2 my-lg-0" method="post">
+            {% csrf_token %}
+            <button id="downloadBtn" class="btn btn-success" name="GAT">Generate Authentication Token</button>
+        </form>
+        <br>
+        <div class="form-check mt-3">
+            <input class="form-check-input" type="checkbox" id="termsCheckbox">
+            <label class="form-check-label" for="termsCheckbox">
+                I agree to the <a href="{% url 'terms_of_service' %}">terms and conditions</a>
+            </label>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    document.getElementById('termsCheckbox').addEventListener('change', function () {
+        const downloadBtn = document.getElementById('downloadBtn');
+        downloadBtn.disabled = !this.checked;
+    });
+
+    document.getElementById('downloadBtn').addEventListener('click', function () {
+        if (document.getElementById('termsCheckbox').checked) {
+            window.location.href = "{% url 'download_script' %}";
+        }
+    });
+</script>
+{% endblock %}

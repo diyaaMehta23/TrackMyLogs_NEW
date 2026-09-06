@@ -1,0 +1,74 @@
+{% extends "base_login.html" %}
+
+{% block title %}Verify OTP{% endblock %}
+
+{% block extra_styles %}
+<style>
+    .otp-container {
+        max-width: 450px;
+        margin: 80px auto;
+        background-color: #ffffff;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    .otp-container h2 {
+        color: #007bff;
+        font-weight: 700;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .form-control {
+        font-size: 16px;
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+    }
+
+    .btn-primary {
+        font-weight: 600;
+        font-size: 18px;
+        border-radius: 8px;
+        margin-top: 15px;
+        background-color: #007bff;
+        color: white;
+        width: 100%;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+
+    .otp-container p {
+        font-size: 15px;
+        color: #555;
+        text-align: center;
+    }
+
+    @media (max-width: 500px) {
+        .otp-container {
+            margin: 40px 20px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="otp-container">
+    <h2>Enter OTP</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <input type="text" name="otp" class="form-control my-3" placeholder="Enter OTP" required>
+        <button type="submit" class="btn btn-primary">Verify OTP</button>
+    </form>
+</div>
+{% endblock %}

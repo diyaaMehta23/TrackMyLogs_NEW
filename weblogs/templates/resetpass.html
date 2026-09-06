@@ -1,0 +1,95 @@
+{% extends "base_login.html" %}
+
+{% block title %}Reset Password{% endblock %}
+
+{% block extra_styles %}
+<style>
+    .reset-container {
+        max-width: 450px;
+        margin: 80px auto;
+        background-color: #ffffff;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    .reset-container h2 {
+        color: #007bff;
+        font-weight: 700;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .form-control {
+        font-size: 16px;
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+    }
+
+    .btn-success {
+        font-weight: 600;
+        font-size: 18px;
+        border-radius: 8px;
+        margin-top: 15px;
+    }
+
+    .btn-success:hover {
+        background-color: #28a745;
+    }
+
+    .reset-container p {
+        font-size: 15px;
+        color: #555;
+        text-align: center;
+    }
+
+    .alert {
+        margin-bottom: 10px;
+        padding: 10px;
+        border-radius: 5px;
+    }
+
+    .alert-danger {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+
+    .alert-success {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+
+    @media (max-width: 500px) {
+        .reset-container {
+            margin: 40px 20px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="reset-container">
+    <h2>Reset Your Password</h2>
+    <p>Enter your new password below.</p>
+
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-success{% endif %}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Submit form to backend -->
+    <form method="POST" action="{% url 'reset_password' %}">
+        {% csrf_token %}
+        <input type="password" name="new_password" class="form-control my-3" placeholder="New Password" required>
+        <input type="password" name="confirm_password" class="form-control my-3" placeholder="Confirm Password" required>
+        <button type="submit" class="btn btn-success w-100">Reset Password</button>
+    </form>
+</div>
+{% endblock %}

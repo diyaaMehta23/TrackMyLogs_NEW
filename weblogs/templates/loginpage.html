@@ -1,0 +1,176 @@
+{% extends "base_login.html" %}
+{% load pwa %}
+
+{% block title %}Login & Signup{% endblock %}
+
+{% block extra_styles %}
+<style>
+    @import url("https://fonts.googleapis.com/css2?family=Moderustic:wght@300;400;600;800&display=swap");
+
+    body {
+        font-family: 'Moderustic', sans-serif;
+        background-color: #FCF6F5FF;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        padding: 2rem;
+    }
+
+    .info-section {
+        margin-top: 1.5rem;
+        margin-bottom: 2rem;
+        text-align: left; /* Text aligned to the left */
+    }
+
+    .info-section h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        color: #007bff; /* Blueish */
+    }
+
+    .info-section p {
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+        color: #2a2a2a; /* Paragraph */
+    }
+
+    .btn-container {
+        margin-bottom: 2rem;
+    }
+
+    .form-container {
+        background: #ffffff;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        border: 1px solid black;
+    }
+
+    .form-container h2 {
+        margin-bottom: 1.5rem;
+        color: #007bff; /* Blueish */
+    }
+
+    @media (max-width: 768px) {
+        .info-section {
+            text-align: center; /* Center-align text on smaller screens */
+        }
+
+        .info-section h1 {
+            font-size: 2rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert" style="margin: 10px;">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+{% endif %}
+
+<div class="container">
+    <div class="row justify-content-center"> <!-- Center the row -->
+        <div class="col-lg-6">
+            <div class="info-section">
+                <h1>Welcome to TrackMyLogs</h1>
+                <p>Get the Authentication Token for TrackMyLogs's Log Analyzer and ensure your privacy remotely.</p>
+                <p>We provide exceptional services to make your life easier. Join us today to be part of something great!</p>
+                <div class="btn-container">
+                    <button class="btn btn-primary me-2" onclick="showLogin()">Login</button>
+                    <button class="btn btn-secondary me-2" onclick="showSignup()">Sign Up</button>
+                    <button class="btn btn-warning me-3 m-2" onclick="window.location.href='{% url 'forgotpass' %}'">Forgot Password</button> 
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="form-container">
+                <!-- Login Form -->
+                <form id="loginForm" method="post" class="d-block">
+                    {% csrf_token %}
+                    <h2 class="text-center">Login</h2>
+                    <div class="mb-3">
+                        <label for="loginUsername" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="loginUsername" name="username" placeholder="Enter Username" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="loginPassword" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="loginPassword" name="password" placeholder="Password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100" name="l1">Login</button>
+                </form>
+
+                <!-- Signup Form -->
+                <form id="signupForm" method="post" class="d-none">
+                    {% csrf_token %}
+                    <h2 class="text-center">Sign Up</h2>
+                    <div class="mb-3">
+                        <label for="signupName" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="signupName" name="username" placeholder="Enter your Username" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="signupEmail" class="form-label">Email address</label>
+                        <input type="email" class="form-control" id="signupEmail" name="email" placeholder="Enter email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="signupPassword" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="signupPassword" name="password" placeholder="Password" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="signupConfirmPassword" class="form-label">Confirm Password</label>
+                        <input type="password" class="form-control" id="signupConfirmPassword" name="conpassword" placeholder="Confirm Password" required>
+                    </div>
+                    <button type="submit" class="btn btn-secondary w-100" name="s1">Sign Up</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    function toggleForm() {
+        const loginForm = document.getElementById('loginForm');
+        const signupForm = document.getElementById('signupForm');
+        const forgotPasswordForm = document.getElementById('forgotPasswordForm');
+        loginForm.classList.toggle('d-none');
+        signupForm.classList.toggle('d-none');
+        forgotPasswordForm.classList.add('d-none'); // Hide Forgot Password form
+    }
+
+    function showLogin() {
+        const loginForm = document.getElementById('loginForm');
+        const signupForm = document.getElementById('signupForm');
+        const forgotPasswordForm = document.getElementById('forgotPasswordForm');
+        loginForm.classList.remove('d-none');
+        signupForm.classList.add('d-none');
+        forgotPasswordForm.classList.add('d-none'); // Hide Forgot Password form
+    }
+
+    function showSignup() {
+        const loginForm = document.getElementById('loginForm');
+        const signupForm = document.getElementById('signupForm');
+        const forgotPasswordForm = document.getElementById('forgotPasswordForm');
+        loginForm.classList.add('d-none');
+        signupForm.classList.remove('d-none');
+        forgotPasswordForm.classList.add('d-none'); // Hide Forgot Password form
+    }
+
+    // Example of simple client-side validation
+    document.getElementById('signupForm').addEventListener('submit', function(event) {
+        const password = document.getElementById('signupPassword').value;
+        const confirmPassword = document.getElementById('signupConfirmPassword').value;
+        if (password !== confirmPassword) {
+            event.preventDefault();
+            alert('Passwords do not match!');
+        }
+    });
+</script>
+{% endblock %}

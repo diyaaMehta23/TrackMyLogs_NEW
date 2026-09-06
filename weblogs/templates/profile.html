@@ -1,0 +1,234 @@
+{% extends "base.html" %}
+
+{% block title %}Profile{% endblock %}
+
+{% block extra_styles %}
+<style>
+
+
+    .last_button {
+        display: flex;
+        margin: 10px auto;
+        justify-content: center;
+        align-items: center;
+    }
+    .profile-container {
+        max-width: 800px;
+        margin: 1rem auto;
+        padding: 2rem;
+        background: #fffffe; /* Secondary */
+        border-radius: 12px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .profile-container:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .profile-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .profile-header h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #007bff; /* Blueish */
+    }
+
+    .profile-header p {
+        font-size: 1rem;
+        color: #2a2a2a; /* Paragraph */
+    }
+
+    .profile-info {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .info-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #eff0f3; /* Background */
+        padding: 1rem;
+        border-radius: 8px;
+        transition: background-color 0.3s, transform 0.3s;
+    }
+
+    .info-item:hover {
+        background-color: #e9ecef; /* Slightly darker gray */
+        transform: scale(1.02);
+    }
+
+    .info-item label {
+        font-weight: 500;
+        color: #495057; /* Dark gray */
+        font-size: 1rem;
+    }
+
+    .info-item p {
+        font-size: 1rem;
+        color: #007bff; /* Blueish */
+        margin: 0;
+        font-weight: 500;
+        display: inline-block;
+    }
+
+    .info-item button {
+        margin-left: 1rem;
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 8px;
+        background-color: #ff8e3c; /* Highlight */
+        color: #0d0d0d; /* Button text */
+        font-size: 0.875rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.3s;
+        display: inline-block;
+    }
+
+    .info-item button:hover {
+        background-color: #d9376e; /* Tertiary */
+        transform: scale(1.05);
+    }
+
+    .links-container {
+        margin-top: 2rem;
+        text-align: center;
+    }
+
+    .links-container a {
+        text-decoration: none;
+        margin: 0.5rem;
+        color: #007bff; /* Blueish */
+        font-weight: 500;
+        font-size: 0.95rem;
+        border: 2px solid #007bff; /* Blueish */
+        border-radius: 8px;
+        padding: 0.5rem 1rem;
+        transition: all 0.3s, transform 0.3s;
+    }
+
+    .links-container a:hover {
+        background-color: #007bff; /* Blueish */
+        color: #fffffe; /* Secondary */
+        transform: scale(1.05);
+    }
+
+    .user-info {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        background-color: #eff0f3; /* Background */
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .user-info div {
+        text-align: center;
+    }
+
+    .user-info p {
+        margin: 0;
+        font-size: 1.1rem;
+        color: #007bff; /* Blueish */
+        font-weight: 500;
+    }
+
+    @media (max-width: 576px) {
+        .profile-header h1 {
+            font-size: 2rem;
+        }
+
+        .info-item {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .info-item button {
+            margin-top: 0.5rem;
+            width: 100%;
+        }
+
+        .links-container a {
+            display: block;
+            margin: 0.5rem 0;
+        }
+
+        .user-info {
+            flex-direction: column;
+            gap: 1rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <div class="profile-header">
+        <h1>{{ user.first_name }} {{ user.last_name }}</h1>
+    </div>
+    <div class="user-info">
+        <div>
+            <p>User ID:</p>
+            <p>{{ user.username }}</p>
+        </div>
+        <div>
+            <p>Last Login:</p>
+            <p>{{ user.last_login }}</p>
+        </div>
+    </div>
+    <div class="profile-info">
+        <div class="info-item">
+            <label>Email</label>
+            <div>
+                <p id="user-email">{{ user.email }}</p>
+                <button onclick="copyToClipboard('user-email')">Copy</button>
+            </div>
+        </div>
+        <div class="info-item">
+            <label>Joined Date</label>
+            <p>{{ user.date_joined }}</p>
+        </div>
+        <div class="info-item">
+            <label>Authentication Token</label>
+            <div>
+                <p id="auth-token">{{ authentication_token }}</p>
+                <button onclick="copyToClipboard('auth-token')">Copy</button>
+            </div>
+        </div>
+    </div>
+    {% comment %} <div class="links-container">
+        <a href="#">Website Link</a>
+        <a href="#">Bootsnipp Profile</a>
+        <a href="#">Bootply Profile</a>
+    </div> {% endcomment %}
+</div>
+
+<div class = "last_button">
+    <a href="{% url 'home' %}" class="btn btn-primary mt-4">Back to Home</a>
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    function copyToClipboard(elementId) {
+        var copyText = document.getElementById(elementId).innerText;
+        navigator.clipboard
+            .writeText(copyText)
+            .then(function () {
+            })
+            .catch(function (err) {
+                alert("Failed to copy text: ", err);
+            });
+    }
+</script>
+{% endblock %}

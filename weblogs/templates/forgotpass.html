@@ -1,0 +1,74 @@
+{% extends "base_login.html" %}
+
+{% block title %}Forgot Password{% endblock %}
+
+{% block extra_styles %}
+<style>
+    .forgot-container {
+        max-width: 450px;
+        margin: 80px auto;
+        background-color: #ffffff;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    .forgot-container h2 {
+        color: #007bff;
+        font-weight: 700;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .form-control {
+        font-size: 16px;
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        font-weight: 600;
+        font-size: 18px;
+        border-radius: 8px;
+        margin-top: 15px;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+
+    .forgot-container p {
+        font-size: 15px;
+        color: #333;
+        text-align: center;
+    }
+
+    @media (max-width: 500px) {
+        .forgot-container {
+            margin: 40px 20px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="forgot-container">
+    <h2>Forgot Password</h2>
+    <p>Enter your registered email to reset your password.</p>
+
+    <form method="post">
+        {% csrf_token %}
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <input type="email" name="email" class="form-control my-3" placeholder="Enter your email" required>
+        <button type="submit" class="btn btn-primary w-100">Send OTP</button>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Terms And Conditions - TrackMyLogs{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Terms And Conditions</h2>
+
+    <h4>1. Temporary Data Storage</h4>
+    <p>TrackMyLogs temporarily stores log data while the application is running. Once the application is closed, all logs are automatically deleted.</p>
+
+    <h4>2. Data Security</h4>
+    <p>During its temporary existence, all data is secured using encryption and access control mechanisms to ensure privacy and protection.</p>
+
+    <h4>3. Log Analysis and Reporting</h4>
+    <p>Before deletion, the collected logs are analyzed to generate a report, which is then provided to the user.</p>
+
+    <h4>4. User Responsibilities</h4>
+    <p>Users are responsible for using TrackMyLogs ethically and in compliance with applicable laws.</p>
+
+    <h4>5. Changes to Terms</h4>
+    <p>We reserve the right to modify these terms at any time. Continued use of TrackMyLogs after changes indicates acceptance of the updated terms.</p>
+
+    <a href="{% url 'home' %}" class="btn btn-primary mt-4">Back to Home</a>
+</div>
+{% endblock %}
